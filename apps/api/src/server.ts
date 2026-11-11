@@ -1,5 +1,6 @@
 import http from 'http';
 import { createApp } from './app.js';
+import { initSocketGateway } from './sockets/socket.gateway.js';
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
 import { prisma } from './config/prisma.js';
@@ -7,6 +8,9 @@ import { redis } from './config/redis.js';
 
 const app = createApp();
 const server = http.createServer(app);
+
+// Initialize Real-Time WebSockets Gateway
+initSocketGateway(server);
 
 server.listen(env.PORT, () => {
   logger.info(`🚀 SmartSpace API server listening on http://localhost:${env.PORT} in ${env.NODE_ENV} mode`);

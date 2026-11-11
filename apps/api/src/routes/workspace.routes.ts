@@ -1,9 +1,16 @@
 import { Router } from 'express';
 import { workspaceController } from '../controllers/workspace.controller.js';
+import { occupancyController } from '../controllers/occupancy.controller.js';
 import { searchService } from '../services/search.service.js';
 import { authenticate, requireRole } from '../middlewares/auth.middleware.js';
 import { validateBody, validateQuery } from '../middlewares/validate.js';
-import { workspaceCreateSchema, workspaceUpdateSchema, workspaceQuerySchema, USER_ROLES } from '@smartspace/shared';
+import {
+  workspaceCreateSchema,
+  workspaceUpdateSchema,
+  workspaceQuerySchema,
+  occupancyEventSchema,
+  USER_ROLES,
+} from '@smartspace/shared';
 
 const router: Router = Router();
 
@@ -19,6 +26,15 @@ router.get('/', validateQuery(workspaceQuerySchema), async (req, res, next) => {
 
 // Public: Get space details by ID or Slug
 router.get('/:idOrSlug', (req, res, next) => workspaceController.getWorkspace(req, res, next));
+
+// Real-Time Telemetry & Occupancy Routes
+router.get('/:id/occupancy/live', (req, res, next) => occupancyController.getLiveTelemetry(req, res, next));
+router.get('/:id/occupancy/heatmap', (req, res, next) => occupancyController.getHeatmap(req, res, next));
+router.post(
+  '/:id/occupancy/events',
+  validateBody(occupancyEventSchema),
+  (req, res, next) => occupancyController.recordEvent(req, res, next)
+);
 
 // Owner Protected Routes
 router.use(authenticate);
