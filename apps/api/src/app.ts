@@ -16,6 +16,7 @@ import { adminRoutes } from './routes/admin.routes.js';
 import { bookingRoutes } from './routes/booking.routes.js';
 import { inquiryRoutes } from './routes/inquiry.routes.js';
 import { authenticate, requireRole } from './middlewares/auth.middleware.js';
+import { standardRateLimiter, authRateLimiter } from './middlewares/rate-limit.middleware.js';
 
 // Setup Prometheus Metrics Registry
 const register = new promClient.Registry();
@@ -121,7 +122,9 @@ export function createApp(): Application {
     }
   });
 
-  // 6. Base API Route Indicator
+  // 6. Base API Route Indicator & Global Limiter
+  app.use('/api/v1', standardRateLimiter);
+
   app.get('/api/v1', (_req: Request, res: Response) => {
     res.status(200).json({
       name: 'SmartSpace REST API',
@@ -132,7 +135,7 @@ export function createApp(): Application {
   });
 
   // Mount API v1 Feature Routes
-  app.use('/api/v1/auth', authRoutes);
+  app.use('/api/v1/auth', authRateLimiter, authRoutes);
   app.use('/api/v1/users', userRoutes);
   app.use('/api/v1/spaces', workspaceRoutes);
   app.use('/api/v1/admin', adminRoutes);
@@ -153,12 +156,15 @@ export function createApp(): Application {
     });
   });
 
-  // 8. Global Error Handler
+  // 8. Global Error Handler (Production Safe)
   app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
     logger.error({ err, path: req.path, method: req.method }, 'Unhandled Exception');
 
     const statusCode = err.statusCode || err.status || 500;
-    const message = err.message || 'Internal Server Error';
+    const message =
+      env.NODE_ENV === 'production' && statusCode === 500
+        ? 'Internal Server Error'
+        : err.message || 'Internal Server Error';
 
     res.status(statusCode).json({
       error: err.name || 'Error',
