@@ -62,16 +62,16 @@ curl -s http://localhost:5000/metrics | grep smartspace_
 ### 3.1 Applying Migrations in Production
 ```bash
 # Apply pending schema migrations safely
-pnpm --filter @smartspace/api prisma:migrate deploy
+pnpm --filter @smartspace/backend prisma:migrate deploy
 
 # Verify schema alignment
-pnpm --filter @smartspace/api prisma db pull --print
+pnpm --filter @smartspace/backend prisma db pull --print
 ```
 
 ### 3.2 Seeding Reference Data
 The platform seed script populates 5 global cities (New York, San Francisco, London, Berlin, Singapore), 200 workspaces, amenities, and role-tested accounts:
 ```bash
-pnpm --filter @smartspace/api prisma:seed
+pnpm --filter @smartspace/backend prisma:seed
 ```
 
 ### 3.3 PostgreSQL Backup & Restore (Point-in-Time Recovery)
@@ -127,7 +127,7 @@ To rotate an exposed turnstile/sensor authentication key:
 - The API is equipped with dual-layer rate limiting:
   - **Global Rate Limiter:** 1,000 requests per 15 min per IP.
   - **Auth Rate Limiter:** 30 requests per 15 min per IP.
-- In event of sustained attacks, adjust `windowMs` and `max` in `apps/api/src/middlewares/rate-limit.middleware.ts` or apply Cloudflare WAF challenge rules.
+- In event of sustained attacks, adjust `windowMs` and `max` in `apps/backend/src/middlewares/rate-limit.middleware.ts` or apply Cloudflare WAF challenge rules.
 
 ---
 

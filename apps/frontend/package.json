@@ -1,5 +1,5 @@
 {
-  "name": "@smartspace/web",
+  "name": "@smartspace/frontend",
   "version": "1.0.0",
   "description": "SmartSpace Next.js 15+ Frontend with NexusSpace Real-Time Telemetry and Floorplans",
   "private": true,

@@ -44,15 +44,15 @@ This document provides complete traceability between system requirements, archit
 | **KPI-02** | RFC-compliant CSV report streaming (`/api/v1/admin/analytics/export`) | `analytics.test.ts` > `should stream CSV download on /api/v1/admin/analytics/export` | Integration | PASS |
 | **AUD-01** | Security and administrative audit trail logging | `analytics.test.ts` > `should record and retrieve audit log events` | Integration | PASS |
 | **AUD-02** | RBAC guard blocking non-admin users from moderation and audit logs | `analytics.test.ts` > `should block non-admin users from accessing /api/v1/admin/analytics/kpis` | Security | PASS |
-| **NFR-01** | OWASP Top 10 security: Helmet headers, CORS allowlist, and rate limiting | `foundation.test.ts` & `apps/api/src/app.ts` | Security | PASS |
+| **NFR-01** | OWASP Top 10 security: Helmet headers, CORS allowlist, and rate limiting | `foundation.test.ts` & `apps/backend/src/app.ts` | Security | PASS |
 | **NFR-02** | Prometheus metrics at `/metrics` and health endpoints | `foundation.test.ts` > `should expose Prometheus metrics at /metrics` | Observability | PASS |
-| **NFR-03** | WCAG 2.1 AA accessibility (Skip-to-content, ARIA labels, semantic HTML) | `apps/web/src/components/navigation/navbar.tsx` | Accessibility | PASS |
+| **NFR-03** | WCAG 2.1 AA accessibility (Skip-to-content, ARIA labels, semantic HTML) | `apps/frontend/src/components/navigation/navbar.tsx` | Accessibility | PASS |
 
 ---
 
 ## 3. High-Load Concurrency & Stress Testing (k6)
 
-- **Script:** `apps/api/tests/k6/load-test.js`
+- **Script:** `apps/backend/tests/k6/load-test.js`
 - **Target Load:** 100 concurrent virtual users (VUs)
 - **Target Latency Threshold:** P95 < 300ms
 - **Target Error Rate:** < 1.0%

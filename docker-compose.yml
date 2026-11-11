@@ -44,11 +44,11 @@ services:
       timeout: 5s
       retries: 3
 
-  api:
+  backend:
     build:
       context: .
-      dockerfile: docker/Dockerfile.api
-    container_name: smartspace-api
+      dockerfile: docker/Dockerfile.backend
+    container_name: smartspace-backend
     restart: on-failure
     depends_on:
       postgres:
@@ -68,14 +68,14 @@ services:
       SMTP_HOST: mailhog
       SMTP_PORT: 1025
 
-  web:
+  frontend:
     build:
       context: .
-      dockerfile: docker/Dockerfile.web
-    container_name: smartspace-web
+      dockerfile: docker/Dockerfile.frontend
+    container_name: smartspace-frontend
     restart: on-failure
     depends_on:
-      - api
+      - backend
     ports:
       - "3000:3000"
     environment:

@@ -141,7 +141,7 @@ pnpm install
 cp .env.example .env
 
 # 3. Seed database (5 cities, 200 workspaces, test accounts)
-pnpm --filter @smartspace/api prisma:seed
+pnpm --filter @smartspace/backend prisma:seed
 
 # 4. Run full stack in development mode
 pnpm dev
@@ -155,17 +155,17 @@ The platform includes **64 automated unit, integration, and concurrency race tes
 
 ```bash
 # Run backend test suite
-pnpm --filter @smartspace/api test
+pnpm --filter @smartspace/backend test
 
 # Typecheck backend and frontend
-pnpm --filter @smartspace/api typecheck
-pnpm --filter @smartspace/web typecheck
+pnpm --filter @smartspace/backend typecheck
+pnpm --filter @smartspace/frontend typecheck
 
 # Build frontend production bundle
-pnpm --filter @smartspace/web build
+pnpm --filter @smartspace/frontend build
 
 # Execute k6 load test script (100 concurrent VUs, P95 < 300ms SLA)
-k6 run apps/api/tests/k6/load-test.js
+k6 run apps/backend/tests/k6/load-test.js
 ```
 
 Full requirements traceability is documented in [`TEST_CASES.md`](./TEST_CASES.md). Operational playbooks and deployment runbooks are documented in [`RUNBOOK.md`](./RUNBOOK.md).

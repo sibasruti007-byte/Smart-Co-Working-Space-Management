@@ -17,6 +17,7 @@ import { bookingRoutes } from './routes/booking.routes.js';
 import { inquiryRoutes } from './routes/inquiry.routes.js';
 import { authenticate, requireRole } from './middlewares/auth.middleware.js';
 import { standardRateLimiter, authRateLimiter } from './middlewares/rate-limit.middleware.js';
+import { openApiSpec } from './docs/openapi.js';
 
 // Setup Prometheus Metrics Registry
 const register = new promClient.Registry();
@@ -132,6 +133,30 @@ export function createApp(): Application {
       status: 'ONLINE',
       documentation: '/api/v1/docs',
     });
+  });
+
+  // Interactive OpenAPI Documentation (Scalar API Explorer)
+  app.get('/api/v1/openapi.json', (_req: Request, res: Response) => {
+    res.status(200).json(openApiSpec);
+  });
+
+  app.get('/api/v1/docs', (_req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'text/html');
+    res.status(200).send(`<!doctype html>
+<html>
+  <head>
+    <title>SmartSpace & NexusSpace Interactive API Reference</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>body { margin: 0; background-color: #060e20; }</style>
+  </head>
+  <body>
+    <script
+      id="api-reference"
+      data-url="/api/v1/openapi.json"
+      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  </body>
+</html>`);
   });
 
   // Mount API v1 Feature Routes

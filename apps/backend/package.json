@@ -1,5 +1,5 @@
 {
-  "name": "@smartspace/api",
+  "name": "@smartspace/backend",
   "version": "1.0.0",
   "description": "SmartSpace Express REST API and Real-Time Service",
   "type": "module",
