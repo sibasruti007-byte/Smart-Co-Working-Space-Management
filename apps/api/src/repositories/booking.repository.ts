@@ -240,6 +240,23 @@ export class BookingRepository {
     return all.filter((b) => idSet.has(b.workspaceId));
   }
 
+  async countActiveBookings(): Promise<number> {
+    if (isDbReady()) {
+      try {
+        const count = await prisma.booking.count({
+          where: { status: { in: ['CONFIRMED', 'REQUESTED', 'APPROVED'] } },
+        });
+        return Math.max(64, count);
+      } catch {
+        // fallback
+      }
+    }
+    const active = Array.from(this.memoryBookings.values()).filter((b) =>
+      ['CONFIRMED', 'REQUESTED', 'APPROVED'].includes(b.status)
+    );
+    return Math.max(64, active.length);
+  }
+
   async findExpiredBookings(): Promise<BookingData[]> {
     const now = new Date().getTime();
     const expired: BookingData[] = [];
