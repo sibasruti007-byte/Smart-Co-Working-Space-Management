@@ -144,6 +144,8 @@ export const inquiryCreateSchema = z.object({
   message: z.string().min(5).max(2000),
 });
 
+export type InquiryCreateInput = z.infer<typeof inquiryCreateSchema>;
+
 export const messageCreateSchema = z.object({
   messageText: z.string().min(1).max(2000),
 });

@@ -14,6 +14,7 @@ import { userRoutes } from './routes/user.routes.js';
 import { workspaceRoutes } from './routes/workspace.routes.js';
 import { adminRoutes } from './routes/admin.routes.js';
 import { bookingRoutes } from './routes/booking.routes.js';
+import { inquiryRoutes } from './routes/inquiry.routes.js';
 import { authenticate, requireRole } from './middlewares/auth.middleware.js';
 
 // Setup Prometheus Metrics Registry
@@ -136,6 +137,7 @@ export function createApp(): Application {
   app.use('/api/v1/spaces', workspaceRoutes);
   app.use('/api/v1/admin', adminRoutes);
   app.use('/api/v1/bookings', bookingRoutes);
+  app.use('/api/v1/inquiries', inquiryRoutes);
 
   // RBAC Test Route
   app.get('/api/v1/admin/test-rbac', authenticate, requireRole('ADMIN'), (req: Request, res: Response) => {

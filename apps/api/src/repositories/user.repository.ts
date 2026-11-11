@@ -221,6 +221,10 @@ class UserRepository {
 
     const pref = { id: `pref-${userId}`, userId, ...data, updatedAt: new Date() };
     this.memoryPreferences.set(userId, pref);
+    const existing = this.memoryUsers.get(userId);
+    if (existing) {
+      existing.userPreference = pref;
+    }
     return pref;
   }
 
