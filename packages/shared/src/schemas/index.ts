@@ -108,11 +108,11 @@ export type WorkspaceQueryInput = z.infer<typeof workspaceQuerySchema>;
 
 // Booking Schemas
 export const bookingCreateSchema = z.object({
-  workspaceId: z.string().uuid(),
+  workspaceId: z.string().min(1, 'Workspace ID is required'),
   startTime: z.string().datetime(),
   endTime: z.string().datetime(),
   attendeeCount: z.number().int().positive(),
-  idempotencyKey: z.string().uuid().optional(),
+  idempotencyKey: z.string().optional(),
 });
 
 export type BookingCreateInput = z.infer<typeof bookingCreateSchema>;
@@ -139,7 +139,7 @@ export type OccupancyEventInput = z.infer<typeof occupancyEventSchema>;
 
 // Inquiry & Message Schemas
 export const inquiryCreateSchema = z.object({
-  workspaceId: z.string().uuid(),
+  workspaceId: z.string().min(1),
   subject: z.string().min(3).max(150),
   message: z.string().min(5).max(2000),
 });
@@ -149,16 +149,16 @@ export const messageCreateSchema = z.object({
 });
 
 export const meetingRequestSchema = z.object({
-  threadId: z.string().uuid().optional(),
-  workspaceId: z.string().uuid(),
+  threadId: z.string().optional(),
+  workspaceId: z.string().min(1),
   scheduledAt: z.string().datetime(),
   durationMinutes: z.number().int().min(15).max(180).default(30),
   notes: z.string().max(500).optional(),
 });
 
 export const reviewCreateSchema = z.object({
-  workspaceId: z.string().uuid(),
-  bookingId: z.string().uuid(),
+  workspaceId: z.string().min(1),
+  bookingId: z.string().min(1),
   rating: z.number().int().min(1).max(5),
   comment: z.string().min(5).max(1000),
 });
