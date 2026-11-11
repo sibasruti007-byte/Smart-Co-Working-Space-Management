@@ -11,6 +11,8 @@ import { checkDbAvailability } from './config/prisma.js';
 import { redis } from './config/redis.js';
 import { authRoutes } from './routes/auth.routes.js';
 import { userRoutes } from './routes/user.routes.js';
+import { workspaceRoutes } from './routes/workspace.routes.js';
+import { adminRoutes } from './routes/admin.routes.js';
 import { authenticate, requireRole } from './middlewares/auth.middleware.js';
 
 // Setup Prometheus Metrics Registry
@@ -130,6 +132,8 @@ export function createApp(): Application {
   // Mount API v1 Feature Routes
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/users', userRoutes);
+  app.use('/api/v1/spaces', workspaceRoutes);
+  app.use('/api/v1/admin', adminRoutes);
 
   // RBAC Test Route
   app.get('/api/v1/admin/test-rbac', authenticate, requireRole('ADMIN'), (req: Request, res: Response) => {
