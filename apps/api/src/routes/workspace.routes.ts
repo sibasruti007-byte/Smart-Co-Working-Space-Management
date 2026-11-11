@@ -1,10 +1,21 @@
 import { Router } from 'express';
 import { workspaceController } from '../controllers/workspace.controller.js';
+import { searchService } from '../services/search.service.js';
 import { authenticate, requireRole } from '../middlewares/auth.middleware.js';
-import { validateBody } from '../middlewares/validate.js';
-import { workspaceCreateSchema, workspaceUpdateSchema, USER_ROLES } from '@smartspace/shared';
+import { validateBody, validateQuery } from '../middlewares/validate.js';
+import { workspaceCreateSchema, workspaceUpdateSchema, workspaceQuerySchema, USER_ROLES } from '@smartspace/shared';
 
 const router: Router = Router();
+
+// Public: Smart Search & Multi-Factor Matching
+router.get('/', validateQuery(workspaceQuerySchema), async (req, res, next) => {
+  try {
+    const results = await searchService.searchSpaces(req.query as any);
+    res.status(200).json(results);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // Public: Get space details by ID or Slug
 router.get('/:idOrSlug', (req, res, next) => workspaceController.getWorkspace(req, res, next));
