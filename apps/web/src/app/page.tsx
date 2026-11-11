@@ -1,46 +1,15 @@
 import Link from 'next/link';
-import { ArrowRight, Activity, ShieldCheck, Sparkles, Building2, MapPin, Zap } from 'lucide-react';
+import { ArrowRight, Activity, ShieldCheck, Sparkles, Building2, MapPin, Zap, User, Users, CheckCircle2 } from 'lucide-react';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-between p-6 sm:p-12 relative overflow-hidden">
+    <div className="flex flex-col items-center justify-between p-6 sm:p-12 relative overflow-hidden">
       {/* Background radial gradient glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-      {/* Navigation Header */}
-      <header className="w-full max-w-6xl flex items-center justify-between py-4 border-b border-white/10 glass-panel px-6 rounded-2xl">
-        <div className="flex items-center space-x-3">
-          <div className="h-10 w-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-bold">
-            <Building2 className="w-5 h-5 text-emerald-400" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-white">SmartSpace</span>
-        </div>
-        <nav className="flex items-center space-x-4">
-          <Link
-            href="/spaces"
-            className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
-          >
-            Explore Spaces
-          </Link>
-          <Link
-            href="/spaces/metrohub-4th-floor/live"
-            className="text-sm font-medium text-emerald-400 hover:text-emerald-300 flex items-center space-x-1 transition-colors"
-          >
-            <Activity className="w-4 h-4 inline" />
-            <span>NexusSpace Live</span>
-          </Link>
-          <Link
-            href="/login"
-            className="text-sm px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-semibold hover:bg-emerald-400 transition-colors shadow-glow"
-          >
-            Sign In
-          </Link>
-        </nav>
-      </header>
-
       {/* Hero Section */}
-      <section className="w-full max-w-4xl text-center my-16 space-y-6">
+      <section className="w-full max-w-4xl text-center my-12 space-y-6">
         <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5" />
           <span>Real-Time Telemetry & Matching Platform</span>
@@ -66,10 +35,10 @@ export default function HomePage() {
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
-            href="/spaces/metrohub-4th-floor/live"
+            href="/spaces/apex-executive-suite/live"
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl glass-panel-accent text-emerald-300 border border-emerald-500/30 hover:border-emerald-500/60 transition-all flex items-center justify-center space-x-2"
           >
-            <Activity className="w-4 h-4" />
+            <Activity className="w-4 h-4 text-cyan-400" />
             <span>Launch NexusSpace Telemetry</span>
           </Link>
         </div>
@@ -77,46 +46,82 @@ export default function HomePage() {
 
       {/* 3 Value Pillars */}
       <section className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-        <div className="glass-panel p-6 rounded-2xl space-y-3">
-          <div className="h-10 w-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+        <div className="glass-panel p-6 rounded-3xl space-y-3 border border-white/5">
+          <div className="h-10 w-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
             <Zap className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-semibold text-white">Smart Matching Engine</h3>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-400 leading-relaxed">
             Multi-factor weighted compatibility scoring (0-100) based on team size, budget, amenity coverage, and proximity.
           </p>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl space-y-3">
-          <div className="h-10 w-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+        <div className="glass-panel p-6 rounded-3xl space-y-3 border border-white/5">
+          <div className="h-10 w-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
             <Activity className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-semibold text-white">Live IoT Telemetry</h3>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-400 leading-relaxed">
             Monitor ambient noise dB, indoor air quality (CO₂/VOC), temperature, and live desk-by-desk availability on interactive floorplans.
           </p>
         </div>
 
-        <div className="glass-panel p-6 rounded-2xl space-y-3">
-          <div className="h-10 w-10 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+        <div className="glass-panel p-6 rounded-3xl space-y-3 border border-white/5">
+          <div className="h-10 w-10 rounded-xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <h3 className="text-lg font-semibold text-white">Zero Double-Booking Guarantee</h3>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-400 leading-relaxed">
             Postgres temporal exclusion constraints (`tstzrange`) and serializable transactions guarantee concurrency safety.
           </p>
         </div>
       </section>
 
-      {/* Global Locations Indicator */}
-      <footer className="w-full max-w-6xl py-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 space-y-2 sm:space-y-0">
-        <div className="flex items-center space-x-2">
-          <MapPin className="w-4 h-4 text-emerald-400" />
-          <span>Active Hubs: New York • San Francisco • London • Berlin • Singapore</span>
+      {/* Role Navigation Tiles */}
+      <section className="w-full max-w-5xl my-8 space-y-4">
+        <div className="text-center space-y-1">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400">Role-Tailored Workflows</h2>
+          <p className="text-xs text-slate-500">Select a portal to explore specialized capabilities</p>
         </div>
-        <p>© 2026 SmartSpace Platform Inc. All rights reserved.</p>
-      </footer>
-    </main>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            href="/dashboard/user"
+            className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-emerald-500/30 transition-all space-y-2 group"
+          >
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-xs font-semibold text-emerald-400">Attendee Portal</span>
+              <User className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-base font-bold text-white">Passes & Recommendations</div>
+            <div className="text-xs text-slate-400">Active bookings, digital QR pass, saved spaces, and similar teams.</div>
+          </Link>
+
+          <Link
+            href="/dashboard/owner"
+            className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-cyan-500/30 transition-all space-y-2 group"
+          >
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-xs font-semibold text-cyan-400">Space Owner Command</span>
+              <Building2 className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-base font-bold text-white">Listings & Occupancy</div>
+            <div className="text-xs text-slate-400">Review requests, set pricing, view foot traffic and sensor heatmaps.</div>
+          </Link>
+
+          <Link
+            href="/dashboard/admin"
+            className="glass-panel p-5 rounded-2xl border border-white/5 hover:border-purple-500/30 transition-all space-y-2 group"
+          >
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-xs font-semibold text-purple-400">Platform Admin</span>
+              <ShieldCheck className="w-4 h-4 text-purple-400 group-hover:scale-110 transition-transform" />
+            </div>
+            <div className="text-base font-bold text-white">Moderation & Platform KPIs</div>
+            <div className="text-xs text-slate-400">Verification queue, match accuracy KPIs, CSV report export, and audit logs.</div>
+          </Link>
+        </div>
+      </section>
+    </div>
   );
 }
-
