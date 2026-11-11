@@ -7,8 +7,11 @@ import { v4 as uuidv4 } from 'uuid';
 import promClient from 'prom-client';
 import { env } from './config/env.js';
 import { logger } from './config/logger.js';
-import { prisma } from './config/prisma.js';
+import { checkDbAvailability } from './config/prisma.js';
 import { redis } from './config/redis.js';
+import { authRoutes } from './routes/auth.routes.js';
+import { userRoutes } from './routes/user.routes.js';
+import { authenticate, requireRole } from './middlewares/auth.middleware.js';
 
 // Setup Prometheus Metrics Registry
 const register = new promClient.Registry();
@@ -82,14 +85,9 @@ export function createApp(): Application {
   });
 
   app.get('/health/readiness', async (_req: Request, res: Response) => {
-    let dbStatus = 'UP';
+    const isDbUp = await checkDbAvailability();
+    const dbStatus = isDbUp ? 'UP' : 'DOWN';
     let redisStatus = 'UP';
-
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-    } catch {
-      dbStatus = 'DOWN';
-    }
 
     try {
       await redis.ping();
@@ -97,7 +95,7 @@ export function createApp(): Application {
       redisStatus = 'DOWN';
     }
 
-    const isHealthy = dbStatus === 'UP';
+    const isHealthy = isDbUp;
     const statusCode = isHealthy ? 200 : 503;
 
     res.status(statusCode).json({
@@ -127,6 +125,15 @@ export function createApp(): Application {
       status: 'ONLINE',
       documentation: '/api/v1/docs',
     });
+  });
+
+  // Mount API v1 Feature Routes
+  app.use('/api/v1/auth', authRoutes);
+  app.use('/api/v1/users', userRoutes);
+
+  // RBAC Test Route
+  app.get('/api/v1/admin/test-rbac', authenticate, requireRole('ADMIN'), (req: Request, res: Response) => {
+    res.status(200).json({ message: 'Welcome Admin!', user: req.user });
   });
 
   // 7. 404 Handler
