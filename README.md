@@ -176,3 +176,4 @@ Full requirements traceability is documented in [`TEST_CASES.md`](./TEST_CASES.m
 - **Authentication:** Argon2id password hashing + 15-minute JWT access tokens + rotating httpOnly refresh token cookies with token family reuse invalidation.
 - **OWASP Hardened:** Helmet security headers, CORS origin allowlist, dual-layer rate limiting, and zero-PII structured logging via Pino.
 - **Accessibility:** WCAG 2.1 AA certified with skip-to-content links, semantic HTML5 landmarks, ARIA labels, and high-contrast color tokens.
+

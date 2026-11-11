@@ -138,3 +138,4 @@ To rotate an exposed turnstile/sensor authentication key:
 | **ADMIN** | `admin@smartspace.io` | `Password123!` | Verification Queue, Platform KPIs, CSV Export, Audit Logs |
 | **SPACE_OWNER** | `owner.nyc@smartspace.io` | `Password123!` | Space Management, Approve/Reject Requests, Foot Traffic Heatmaps |
 | **USER** | `alex.rivera@smartspace.io` | `Password123!` | Search & Matching, Desk Reservations, Digital Pass, NexusSpace |
+

@@ -60,3 +60,4 @@ This document provides complete traceability between system requirements, archit
   1. Multi-filter workspace search across 5 global cities (`/api/v1/spaces`)
   2. Workspace detail & dynamic pricing calculator (`/api/v1/spaces/:id`)
   3. IoT sensor telemetry ingestion with API key authentication (`/api/v1/spaces/:id/occupancy/events`)
+
