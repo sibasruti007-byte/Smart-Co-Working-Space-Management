@@ -1,0 +1,64 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Full Stack (Backend + Frontend)",
+      "type": "shell",
+      "command": "pnpm dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      }
+    },
+    {
+      "label": "Start Backend Server (Port 5000)",
+      "type": "shell",
+      "command": "pnpm dev:backend",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Start Frontend Web (Port 3000)",
+      "type": "shell",
+      "command": "pnpm dev:frontend",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "clear": true
+      }
+    },
+    {
+      "label": "Seed Database (200 Spaces & 5 Cities)",
+      "type": "shell",
+      "command": "pnpm prisma:seed",
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Automated Tests (Vitest)",
+      "type": "shell",
+      "command": "pnpm test",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Typecheck Monorepo",
+      "type": "shell",
+      "command": "pnpm typecheck",
+      "problemMatcher": []
+    }
+  ]
+}

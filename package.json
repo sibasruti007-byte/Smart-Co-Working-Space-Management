@@ -4,6 +4,7 @@
   "private": true,
   "description": "SmartSpace & NexusSpace Co-Working Space Management Monorepo",
   "scripts": {
+    "dev": "pnpm --filter @smartspace/backend --filter @smartspace/frontend --parallel dev",
     "dev:backend": "pnpm --filter @smartspace/backend dev",
     "dev:frontend": "pnpm --filter @smartspace/frontend dev",
     "dev:api": "pnpm --filter @smartspace/backend dev",
