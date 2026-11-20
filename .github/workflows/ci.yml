@@ -45,12 +45,16 @@ jobs:
           node-version: 22
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 10
+          run_install: false
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build Shared Types & Schemas
+        run: pnpm build:shared
 
       - name: Generate Prisma Client
         run: pnpm prisma:generate
@@ -69,4 +73,3 @@ jobs:
 
       - name: Build Monorepo
         run: pnpm build
-

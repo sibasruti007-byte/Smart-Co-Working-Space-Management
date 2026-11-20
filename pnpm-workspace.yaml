@@ -9,3 +9,11 @@ allowBuilds:
   esbuild: true
   msgpackr-extract: true
   prisma: true
+
+onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
+  - 'argon2'
+  - 'esbuild'
+  - 'msgpackr-extract'
+  - 'prisma'
