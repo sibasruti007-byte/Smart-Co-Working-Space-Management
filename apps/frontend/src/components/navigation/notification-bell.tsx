@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Bell, CheckCheck, Sparkles, Calendar, MessageSquare, CheckCircle2 } from 'lucide-react';
+import { Bell, CheckCheck, Sparkles, MessageSquare, CheckCircle2, Trash2, PlusCircle } from 'lucide-react';
 
 interface NotificationItem {
   id: string;
@@ -55,6 +55,35 @@ export function NotificationBell() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   };
 
+  const clearAll = () => {
+    setNotifications([]);
+  };
+
+  const addSimulatedAlert = () => {
+    const alerts: NotificationItem[] = [
+      {
+        id: `notif-${Date.now()}`,
+        type: 'TELEMETRY',
+        title: 'IAQ Clean Air Optimal',
+        message: 'Floor 4 CO₂ levels purged to 420 ppm. Filtration cycle complete.',
+        time: 'Just now',
+        read: false,
+        link: '/spaces/apex-executive-suite/live',
+      },
+      {
+        id: `notif-${Date.now()}`,
+        type: 'BOOKING',
+        title: 'Turnstile Access Granted',
+        message: 'Gate 04 NFC credentials synchronized with your pass.',
+        time: 'Just now',
+        read: false,
+        link: '/spaces/apex-executive-suite/live',
+      },
+    ];
+    const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+    setNotifications((prev) => [randomAlert, ...prev]);
+  };
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -72,7 +101,7 @@ export function NotificationBell() {
         aria-label="View notifications"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-xl bg-[#131b2e] hover:bg-slate-800 border border-white/10 text-slate-300 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500"
+        className="relative p-2 rounded-xl bg-[#131b2e] hover:bg-slate-800 border border-white/10 hover:border-emerald-500/40 text-slate-300 hover:text-white transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500"
       >
         <Bell className="w-4 h-4" />
         {unreadCount > 0 && (
@@ -93,27 +122,54 @@ export function NotificationBell() {
                 </span>
               )}
             </div>
-            {unreadCount > 0 && (
-              <button
-                type="button"
-                onClick={markAllRead}
-                className="text-[11px] text-slate-400 hover:text-emerald-400 flex items-center space-x-1 transition-colors"
-              >
-                <CheckCheck className="w-3.5 h-3.5" />
-                <span>Mark all as read</span>
-              </button>
-            )}
+            <div className="flex items-center space-x-2">
+              {unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={markAllRead}
+                  className="text-[11px] text-slate-400 hover:text-emerald-400 flex items-center space-x-1 transition-colors cursor-pointer"
+                >
+                  <CheckCheck className="w-3.5 h-3.5" />
+                  <span>Mark read</span>
+                </button>
+              )}
+              {notifications.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="text-[11px] text-slate-500 hover:text-rose-400 flex items-center space-x-1 transition-colors cursor-pointer"
+                  title="Clear all notifications"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </button>
+              )}
+            </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto space-y-2 pr-1">
             {notifications.length === 0 ? (
-              <div className="text-center py-6 text-xs text-slate-500">No notifications</div>
+              <div className="text-center py-6 space-y-2">
+                <p className="text-xs text-slate-500">No active notifications</p>
+                <button
+                  type="button"
+                  onClick={addSimulatedAlert}
+                  className="inline-flex items-center space-x-1 text-[11px] text-emerald-400 hover:underline cursor-pointer"
+                >
+                  <PlusCircle className="w-3 h-3" />
+                  <span>Simulate Inbound Push</span>
+                </button>
+              </div>
             ) : (
               notifications.map((n) => (
                 <Link
                   key={n.id}
                   href={n.link || '#'}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setNotifications((prev) =>
+                      prev.map((item) => (item.id === n.id ? { ...item, read: true } : item))
+                    );
+                    setIsOpen(false);
+                  }}
                   className={`block p-3 rounded-2xl border transition-all ${
                     n.read
                       ? 'bg-transparent border-white/5 opacity-75 hover:bg-white/[0.02]'
@@ -141,13 +197,21 @@ export function NotificationBell() {
             )}
           </div>
 
-          <div className="border-t border-white/10 pt-2 text-center">
+          <div className="border-t border-white/10 pt-2 flex items-center justify-between text-[11px]">
+            <button
+              type="button"
+              onClick={addSimulatedAlert}
+              className="text-slate-400 hover:text-cyan-400 flex items-center space-x-1 cursor-pointer"
+            >
+              <PlusCircle className="w-3 h-3" />
+              <span>Simulate Alert</span>
+            </button>
             <Link
               href="/dashboard/user"
               onClick={() => setIsOpen(false)}
-              className="text-[11px] text-emerald-400 hover:underline font-semibold"
+              className="text-emerald-400 hover:underline font-semibold"
             >
-              View In-App Activity Center →
+              Attendee Dashboard →
             </Link>
           </div>
         </div>
@@ -155,4 +219,3 @@ export function NotificationBell() {
     </div>
   );
 }
-

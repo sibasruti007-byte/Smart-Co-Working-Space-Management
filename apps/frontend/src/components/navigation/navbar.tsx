@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -12,18 +12,32 @@ import {
   User,
   Menu,
   X,
-  Radio,
   ChevronDown,
+  LogOut,
+  Sparkles,
 } from 'lucide-react';
 import { NotificationBell } from './notification-bell';
+import { SocketSyncBadge } from './socket-sync-badge';
+import { useAuth } from '@/hooks/use-auth';
 
 export function Navbar() {
   const pathname = usePathname();
+  const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dashboardDropdownOpen, setDashboardDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
-  // Skip global navbar on standalone full-screen mobile app route if desired, or render clean banner
-  const isNexusMobile = pathname.endsWith('/live');
+  // Close user dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -86,7 +100,7 @@ export function Navbar() {
                   aria-expanded={dashboardDropdownOpen}
                   aria-haspopup="true"
                   onClick={() => setDashboardDropdownOpen(!dashboardDropdownOpen)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors flex items-center space-x-1.5"
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-white/5 transition-colors flex items-center space-x-1.5 cursor-pointer"
                 >
                   <LayoutDashboard className="w-3.5 h-3.5 text-purple-400" />
                   <span>Role Portals</span>
@@ -141,30 +155,89 @@ export function Navbar() {
 
           {/* Right Action Icons & Controls */}
           <div className="flex items-center space-x-3">
-            {/* Real-time Socket Indicator */}
-            <div className="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#131b2e] border border-white/5 text-[10px] font-mono text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>SOCKET SYNC</span>
-            </div>
+            {/* Real-time Socket Diagnostic Trigger */}
+            <SocketSyncBadge />
 
             {/* In-App Notifications Bell */}
             <NotificationBell />
 
-            {/* Auth / Account Link */}
-            <Link
-              href="/login"
-              className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition-colors flex items-center space-x-1.5"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Sign In</span>
-            </Link>
+            {/* Auth / Account Profile Button */}
+            {isAuthenticated && user ? (
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  type="button"
+                  aria-expanded={userDropdownOpen}
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="px-3 py-1.5 rounded-xl bg-[#131b2e] hover:bg-slate-800 border border-emerald-500/30 text-emerald-400 text-xs font-semibold transition-all flex items-center space-x-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px] font-bold">
+                    {user.fullName ? user.fullName[0].toUpperCase() : 'U'}
+                  </div>
+                  <span className="max-w-[100px] truncate text-slate-200">{user.fullName || 'User'}</span>
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                </button>
+
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#0b1326] border border-white/10 shadow-2xl p-3 z-50 space-y-2 backdrop-blur-xl">
+                    <div className="p-2 border-b border-white/10 space-y-0.5">
+                      <div className="text-xs font-bold text-white truncate">{user.fullName}</div>
+                      <div className="text-[11px] text-slate-400 font-mono truncate">{user.email}</div>
+                      <span className="inline-block mt-1 text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        {user.role}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1">
+                      <Link
+                        href="/dashboard/user"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center space-x-2 p-2 rounded-xl text-xs text-slate-300 hover:bg-white/5 hover:text-white"
+                      >
+                        <User className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>My Dashboard</span>
+                      </Link>
+                      <Link
+                        href="/spaces/apex-executive-suite/live"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center space-x-2 p-2 rounded-xl text-xs text-slate-300 hover:bg-white/5 hover:text-white"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                        <span>Nexus Live Desk Pass</span>
+                      </Link>
+                    </div>
+
+                    <div className="pt-2 border-t border-white/10">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          logout();
+                          setUserDropdownOpen(false);
+                        }}
+                        className="w-full text-left flex items-center space-x-2 p-2 rounded-xl text-xs text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold transition-colors flex items-center space-x-1.5 cursor-pointer shadow-glow"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Sign In</span>
+              </Link>
+            )}
 
             {/* Mobile Hamburger Button */}
             <button
               type="button"
               aria-label="Toggle navigation menu"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-[#131b2e] text-slate-400 hover:text-white border border-white/10"
+              className="md:hidden p-2 rounded-xl bg-[#131b2e] text-slate-400 hover:text-white border border-white/10 cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
@@ -215,4 +288,3 @@ export function Navbar() {
     </>
   );
 }
-
