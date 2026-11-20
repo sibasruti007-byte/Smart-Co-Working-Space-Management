@@ -14,13 +14,18 @@
     "build:frontend": "pnpm --filter @smartspace/frontend build",
     "build:api": "pnpm --filter @smartspace/backend build",
     "build:web": "pnpm --filter @smartspace/frontend build",
-    "build": "pnpm build:shared && pnpm build:backend && pnpm build:frontend",
+    "build": "pnpm build:shared && pnpm build:frontend && node -e \"const fs=require('fs'); if(fs.existsSync('apps/frontend/.next')) fs.cpSync('apps/frontend/.next', '.next', {recursive:true}); if(fs.existsSync('apps/frontend/public')) fs.cpSync('apps/frontend/public', 'public', {recursive:true});\"",
     "typecheck": "pnpm -r typecheck",
     "lint": "eslint .",
     "test": "pnpm --filter @smartspace/backend test",
     "prisma:generate": "pnpm --filter @smartspace/backend prisma:generate",
     "prisma:push": "pnpm --filter @smartspace/backend prisma:push",
     "prisma:seed": "pnpm --filter @smartspace/backend prisma:seed"
+  },
+  "dependencies": {
+    "next": "^15.1.7",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.72.2",
